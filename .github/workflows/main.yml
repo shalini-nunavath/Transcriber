@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    env:
+        GITHUB_TOKEN: ${{ secrets.transcriber_token }}
+
 
     steps:
     - name: Checkout repository
