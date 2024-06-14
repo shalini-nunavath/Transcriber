@@ -23,8 +23,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip3 install --upgrade pip3
-        pip3 install -r requirements.txt
- 
+        pip3 install streamlit youtube_transcript_api 
+
     - name: Run tests
       run: |
         python -m unittest discover
