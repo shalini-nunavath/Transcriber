@@ -1,38 +1,38 @@
 name: Deploy to Local Server
-
+ 
 on:
   push:
     branches:
       - main
-
+ 
 jobs:
   deploy:
     runs-on: self-hosted
     env:
         GITHUB_TOKEN: ${{ secrets.transcriber_token }}
-
-
+ 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
+ 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.12.3'
-
+        python-version: '3.12'
+ 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
+ 
     - name: Run tests
       run: |
         python -m unittest discover
-
+ 
     - name: Deploy application
       run: |
         # Your deployment script goes here
         # This can include copying files, restarting services, etc.
         # Example:
         python deploy.py
+
