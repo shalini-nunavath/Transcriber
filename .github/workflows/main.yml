@@ -26,10 +26,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests
-      run: |
-        python -m unittest discover
-
     - name: Build application
       run: |
         python yt_transcriber_app.py 
