@@ -6,6 +6,48 @@ on:
       - main
 
 jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build application
+      run: |
+        python yt_transcriber_app.py
+        mkdir dist
+        cp -r * dist/
+
+    - name: Deploy to GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git checkout --orphan gh-pages
+        rm -rf *
+        mv dist/* .
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push --force origin gh-pagesname: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
   deploy:
     runs-on: windows-latest
 
