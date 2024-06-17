@@ -1,38 +1,45 @@
-name: Deploy to Local Server
- 
+name: Deploy to GitHub Pages
+
 on:
   push:
     branches:
       - main
- 
+
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: windows-latest
+
     env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
- 
+      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
- 
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
- 
+
     - name: Install dependencies
       run: |
-        python -m pip3 install --upgrade pip3
-        pip3 install streamlit youtube_transcript_api 
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
         python -m unittest discover
- 
-    - name: Deploy application
+
+    - name: Build application
       run: |
-        # Your deployment script goes here
-        # This can include copying files, restarting services, etc.
-        # Example:
-        python deploy.py
+        python yt_transcriber_app.py 
+
+    - name: Deploy to GitHub Pages
+      run: |
+        git clone --branch gh-pages https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/<your-username>/<your-repo>.git gh-pages
+        cd gh-pages
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push origin gh-pages
+
 
