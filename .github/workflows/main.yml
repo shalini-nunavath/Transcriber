@@ -31,6 +31,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
-        
+        python yt_transcriber_app.py
 
 
