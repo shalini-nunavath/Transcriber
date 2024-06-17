@@ -42,40 +42,4 @@ jobs:
         git commit -m "Deploy to GitHub Pages"
         git push --force origin gh-pagesname: Deploy to GitHub Pages
 
-on:
-  push:
-    branches:
-      - main
 
-jobs:
-  deploy:
-    runs-on: windows-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Build application
-      run: |
-        python yt_transcriber_app.py
-
-    - name: Deploy to GitHub Pages
-      run: |
-        git clone --branch gh-pages https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/shalini-nunavath/Transcriber.git gh-pages
-        cp -r dist/* gh-pages/
-        git add .
-        git commit -m "Deploy to GitHub Pages"
-        git push origin gh-pages
