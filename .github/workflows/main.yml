@@ -11,7 +11,7 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
+      
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -28,14 +28,19 @@ jobs:
 
     - name: Build application
       run: |
-        python yt_transcriber_app.py 
+        # Run your build command here
+        python yt_transcriber.py sdist bdist_wheel
 
     - name: Deploy to GitHub Pages
       run: |
-        git clone --branch gh-pages https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/<your-username>/<your-repo>.git gh-pages
-        cd gh-pages
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git clone --branch gh-pages https://x-access-token:${ACCESS_TOKEN}@github.com/<your-username>/<your-repo>.git
+        cp -r dist/* <your-repo>/
+        cd <your-repo>
         git add .
         git commit -m "Deploy to GitHub Pages"
         git push origin gh-pages
+
 
 
