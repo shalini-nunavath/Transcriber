@@ -26,8 +26,6 @@ jobs:
     - name: Build application
       run: |
         python yt_transcriber_app.py
-        mkdir dist
-        cp -r * dist/
 
     - name: Deploy to GitHub Pages
       env:
