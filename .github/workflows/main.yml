@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Streamlit app
-        run: streamlit run app.py &
+        run: streamlit run yt_transcriber_app.py 
 
       - name: Build and deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
