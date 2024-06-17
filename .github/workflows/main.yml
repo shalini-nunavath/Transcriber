@@ -34,7 +34,6 @@ jobs:
       run: |
         git clone --branch gh-pages https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/shalini-nunavath/Transcriber.git gh-pages
         cp -r dist/* gh-pages/
-        cd gh-pages
         git add .
         git commit -m "Deploy to GitHub Pages"
         git push origin gh-pages
