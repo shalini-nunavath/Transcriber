@@ -29,15 +29,13 @@ jobs:
     - name: Build application
       run: |
         # Run your build command here
-        python yt_transcriber.py sdist bdist_wheel
+        python yt_transcriber.py 
 
     - name: Deploy to GitHub Pages
       run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
-        git clone --branch gh-pages https://x-access-token:${ACCESS_TOKEN}@github.com/<your-username>/<your-repo>.git
-        cp -r dist/* <your-repo>/
-        cd <your-repo>
+        git clone --branch gh-pages https://x-access-token:${ACCESS_TOKEN}@github.com/shalini-nunavath/Transcriber.git
+        cp -r dist/* Transcriber/
+        cd Transcriber
         git add .
         git commit -m "Deploy to GitHub Pages"
         git push origin gh-pages
