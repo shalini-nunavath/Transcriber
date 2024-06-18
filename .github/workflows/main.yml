@@ -1,18 +1,23 @@
 name: Deploy to GitHub Pages
+
 on:
   push:
     branches:
       - main  # Adjust as needed
+
 jobs:
   deploy:
     runs-on: windows-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.12'  # Specify the correct Python version
+          python-version: '3.12'  # Specify the Python version you need
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -23,5 +28,54 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          streamlit run yt_transcriber_app.py --server.port ${{ job.services.nginx.ports[80] }} &  # Run your Streamlit app
-          streamlit run build
+          streamlit run yt_transcriber_app.py --server.port ${{ random(3000, 5000) }} &  # Run your Streamlit app on a random port
+          sleep 5  # Wait for Streamlit to start
+
+          # Install Streamlit Component Server globally
+          npm install -g @streamlit/component-server
+
+          # Start Streamlit Component Server
+          npx streamlit-component-server --main yt_transcriber_app.py --server.port 3001 &
+
+          # Wait for a moment to ensure Component Server starts
+          sleep 5
+
+          # Deploy to GitHub Pages
+          npx streamlit-component-server deploy yt_transcriber_app.py \
+            --github_token $GITHUB_TOKEN \
+            --server.port 8501 \
+            --server.baseUrlPath /your_app \
+            --bucket your-github-pages-repo \
+            --bucket_mount_path / \
+            --bucket_branch gh-pages \
+            --bucket_repo_owner your-username \
+            --bucket_repo_name your-repo-name
+
+
+# name: Deploy to GitHub Pages
+# on:
+#   push:
+#     branches:
+#       - main  # Adjust as needed
+# jobs:
+#   deploy:
+#     runs-on: windows-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.12'  # Specify the correct Python version
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#           pip install streamlit
+
+#       - name: Build and deploy to GitHub Pages
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           streamlit run yt_transcriber_app.py --server.port ${{ job.services.nginx.ports[80] }} &  # Run your Streamlit app
+#           streamlit run build
