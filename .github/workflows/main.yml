@@ -24,7 +24,7 @@ jobs:
     
     - name: Run tests  # Optional: Add a step to run tests if needed
       run: |
-        python -m pytest  # Example command for running tests
+        streamlit run yt_transcriber_app.py  # Example command for running tests
     
     - name: Build
       run: |
