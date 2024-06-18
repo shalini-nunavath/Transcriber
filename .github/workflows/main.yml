@@ -28,5 +28,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
-         stream run yt_transcriber_app.py
-         stream run build
+         streamlit run yt_transcriber_app.py
+         streamlit run build
