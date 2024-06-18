@@ -1,38 +1,43 @@
-name: Deploy to GitHub Pages
+name: Deploy Streamlit App to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  build-and-deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: 3.12
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Streamlit app
-        run: streamlit run yt_transcriber_app.py 
+      - name: Run Streamlit
+        run: streamlit run app.py --server.port 8501 &
+      
+      - name: Wait for Streamlit to start
+        run: sleep 15
 
-      - name: Build and deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+      - name: Download Streamlit App Page
+        run: wget -r -np -nH --cut-dirs=3 -P build http://localhost:8501
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.1.0
         with:
           branch: gh-pages
-          folder: .  # Root directory of your repository
-          build_script: |
-            # Nothing to build, but can be useful for other projects
-          commit_message: "Deployed using GitHub Pages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          folder: build
+
