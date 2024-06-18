@@ -18,9 +18,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install streamlit
-      - name: Install Streamlit Component Server
-        run: |
-          npm install -g @streamlit/component-server
+
       - name: Build and deploy to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
