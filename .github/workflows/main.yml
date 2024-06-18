@@ -6,7 +6,7 @@ on:
       - main  # Change this to your main branch or any branch you prefer
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -22,23 +22,12 @@ jobs:
       run: |
         pip install -r requirements.txt  # Install your Python dependencies
     
-    - name: Run tests  # Optional: Add a step to run tests if needed
+    - name: Generate static content
       run: |
-        streamlit run yt_transcriber_app.py  # Example command for running tests
-    
-    - name: Build
-      run: |
-        # If you have a specific build step, add it here
-        # For Streamlit, this might be setting up your app
-        # Since Streamlit serves the app rather than generating static files,
-        # you might want to skip this step or use it for preparation
+        streamlit yt_transcriber_app.py build # Replace with your script to generate static content
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
-        publish_dir: ./path/to/your/built/files  # Specify the directory with your built files
-    
-    - name: Run Streamlit app  # Run Streamlit as a separate step
-      run: |
-        streamlit run yt_transcriber_app.py
+        publish_dir: ./output  # Specify the directory with your generated static content
