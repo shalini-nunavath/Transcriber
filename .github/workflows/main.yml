@@ -27,13 +27,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Streamlit
-        run: streamlit run yt_transcriber_app.py --server.port 8501 &
+        run: streamlit run yt_transcriber_app.py  &
       
       - name: Wait for Streamlit to start
         run: sleep 15
-
-      - name: Download Streamlit App Page
-        run: wget -r -np -nH --cut-dirs=3 -P build http://localhost:8501
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
