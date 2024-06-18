@@ -38,7 +38,7 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Run Python Script
-      run: python yt_transcriber_app.py
+      run: streamlit run yt_transcriber_app.py
 
   deploy:
     needs: [run-python]
@@ -61,7 +61,7 @@ jobs:
         # Command to build your project, for example:
         # mkdocs build
         # or sphinx-build docs/ docs/_build/
-        python yt_transcriber_app.py
+        streamlit run yt_transcriber_app.py
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
