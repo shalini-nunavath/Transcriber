@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build_and_deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: 3.8
 
       - name: Install dependencies
         run: |
@@ -36,8 +36,7 @@ jobs:
         run: wget -r -np -nH --cut-dirs=3 -P build http://localhost:8501
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.1.0
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: build
-
