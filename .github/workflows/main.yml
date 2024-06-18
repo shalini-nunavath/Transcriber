@@ -1,35 +1,47 @@
-name: Deploy to GitHub Pages
+name: Python CI
 
-on:
-  push:
-    branches:
-      - main  # Change this to your main branch
+on: [push, pull_request]
 
 jobs:
-  deploy:
-    runs-on: windows-latest
-    
+  run-python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.12]
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python Version
+      uses: actions/setup-python@v4.3.0
       with:
-        python-version: 3.12  # Choose your Python version
-        
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt  # Install your Python dependencies
-        # Replace requirements.txt with your requirements file if you have one
-    
-    - name: Build
-      run: |
-        # Add commands to build your Python project
-        # For example: python build.py or python setup.py build
-        
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache Dependencies
+      uses: actions/cache@v3
+      id: cache1
       with:
-        github_token: ${{ secrets.ACCESS_TOKEN }}
-        publish_dir: ./path/to/your/html  # Specify the directory with your HTML content
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install Dependencies
+      if: steps.cache1.outputs.cache-hit != 'true'
+      run: pip install -r requirements.txt
+
+    - name: Run Python Script
+      run: python yt_transcriber_app.py
+
+  run-python-test2:
+    needs: [run-python]
+    runs-on: windows-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python Version
+      uses: actions/setup-python@v4.3.0
+      with:
+        python-version: '3.12'
