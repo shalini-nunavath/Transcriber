@@ -1,70 +1,44 @@
-name: Python CI and Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Change this to your main branch or any branch you prefer
 
 jobs:
-  run-python:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.12]
-
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Setup Python Version
-      uses: actions/setup-python@v4.3.0
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Cache Dependencies
-      uses: actions/cache@v3
-      id: cache1
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
-    - name: Install Dependencies
-      if: steps.cache1.outputs.cache-hit != 'true'
-      run: pip install -r requirements.txt
-
-    - name: Run Python Script
-      run: streamlit run yt_transcriber_app.py
-
   deploy:
-    needs: [run-python]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Setup Python Version
-      uses: actions/setup-python@v4.3.0
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.12'
-
-    - name: Install Dependencies
-      run: pip install -r requirements.txt
-
-    - name: Build Project
+        python-version: 3.12 # Choose your Python version
+        
+    - name: Install dependencies
       run: |
-        # Command to build your project, for example:
-        # mkdocs build
-        # or sphinx-build docs/ docs/_build/
-        streamlit run yt_transcriber_app.py
-
+        pip install -r requirements.txt  # Install your Python dependencies
+    
+    - name: Run tests  # Optional: Add a step to run tests if needed
+      run: |
+        python -m pytest  # Example command for running tests
+    
+    - name: Build
+      run: |
+        # If you have a specific build step, add it here
+        # For Streamlit, this might be setting up your app
+        # Since Streamlit serves the app rather than generating static files,
+        # you might want to skip this step or use it for preparation
+    
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
-        publish_dir: ./docs/_build/html # Adjust to your build output directory
+        publish_dir: ./path/to/your/built/files  # Specify the directory with your built files
+    
+    - name: Run Streamlit app  # Run Streamlit as a separate step
+      run: |
+        streamlit run yt_transcriber_app.py
