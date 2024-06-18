@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Streamlit
-        run: streamlit run yt_transcriber.py &
+        run: streamlit run yt_transcriber.py --server.port 8501 &
       
       - name: Wait for Streamlit to start
         run: sleep 15
