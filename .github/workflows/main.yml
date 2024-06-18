@@ -28,28 +28,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
-          # Build your Streamlit app (if needed)
-          # streamlit run build
-
-          # Run your Streamlit app
-          streamlit run yt_transcriber_app.py --server.port ${{ job.services.nginx.ports[80] }} &
-
-          # Install Streamlit Component Server globally
-          npm install -g @streamlit/component-server
-
-          # Start Streamlit Component Server
-          npx streamlit-component-server --main yt_transcriber_app.py --server.port 3001 &
-
-          # Wait for a moment to ensure Component Server starts
-          sleep 5
-
-          # Deploy to GitHub Pages
-          npx streamlit-component-server deploy yt_transcriber_app.py \
-            --github_token $GITHUB_TOKEN \
-            --server.port 8501 \
-            --server.baseUrlPath /your_app \
-            --bucket your-github-pages-repo \
-            --bucket_mount_path / \
-            --bucket_branch gh-pages \
-            --bucket_repo_owner your-username \
-            --bucket_repo_name your-repo-name
+         stream run yt_transcriber_app.py
+         stream run build
