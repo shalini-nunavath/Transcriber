@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Streamlit
-        run: streamlit run yt_transcriber.py --server.port 8501 &
+        run: streamlit run yt_transcriber_app.py --server.port 8501 &
       
       - name: Wait for Streamlit to start
         run: sleep 15
